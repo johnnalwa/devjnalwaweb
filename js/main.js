@@ -115,3 +115,36 @@
 	});
 
 })(jQuery);
+
+$(document).ready(function() {
+    $('.contactForm').submit(function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+        
+        // Perform client-side validation
+        var name = $('#name').val();
+        var email = $('#email').val();
+        var subject = $('#subject').val();
+        var message = $('#message').val();
+        
+        if (name.trim() == '' || email.trim() == '' || subject.trim() == '' || message.trim() == '') {
+            alert('Please fill in all fields.');
+            return false;
+        }
+        
+        // Submit the form data to your server-side script
+        $.ajax({
+            type: 'POST',
+            url: 'send_email.php', // Replace 'send_email.php' with the path to your server-side script
+            data: $(this).serialize(), // Serialize the form data
+            success: function(response) {
+                $('#sendmessage').html(response); // Display success message
+                $('#errormessage').html(''); // Clear any previous error message
+                $('.contactForm')[0].reset(); // Reset the form
+            },
+            error: function(xhr, status, error) {
+                $('#errormessage').html('Error: ' + error); // Display error message
+            }
+        });
+    });
+});
+
